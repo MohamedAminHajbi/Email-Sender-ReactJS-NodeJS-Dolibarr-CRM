@@ -1,40 +1,42 @@
+const express = require('express');
 const nodemailer = require('nodemailer');
 const mysql = require('mysql');
+const cors = require('cors');
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  port: 3306,
-  user: 'dolibarrmysql',
-  password: '11629747',
-  database: 'dolibarr',
+const app = express();
+const port = 8000;
+app.use(cors());
+app.use(express.json()); // Add this line to parse JSON data from the request body
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'mohamedaminehajbi6@gmail.com',
+    pass: 'qmsqyntspssuwlir',
+  },
 });
 
-    // Create a transporter to send emails
-    var transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'mohamedaminehajbi6@gmail.com',
-        pass: 'qmsqyntspssuwlir',
-      },
-    });
-    var mailOptions = {
-        from: 'mohamedaminehajbi6@gmail.com',
-        to: "aminhajbi116@gmail.com",
-        subject: "subject",
-        text: "content",
-    };
+app.post('/send-email', (req, res) => {
+  const { subject, to, mail } = req.body;
 
-    // Iterate over recipients and send emails
-    transporter.sendMail(
-        mailOptions, function(error,info){
-            if(error){
-                console.log(error);
-            } else {
-                console.log('Email sent: '+ info.response);
-            }
-        }
-      );
-      
-      
-    
+  const mailOptions = {
+    from: 'mohamedaminehajbi6@gmail.com',
+    to: to,
+    subject: subject,
+    text: mail,
+  };
 
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send('Email sent');
+    }
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

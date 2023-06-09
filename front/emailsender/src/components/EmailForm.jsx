@@ -2,19 +2,30 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 const EmailForm = () => {
-  const [subject, setSubject] = useState();
-  const [to, setTo] = useState();
-  const [mail, setMail] = useState();
-
+  const [subject, setSubject] = useState('');
+  const [to, setTo] = useState('');
+  const [mail, setMail] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      setSubject("");
-      setTo("");
-      
-      setMail("");
-      
+      const response = await fetch('http://localhost:8000/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subject, to, mail }),
+      });
+
+      if (response.ok) {
+        console.log('Email sent');
+        setSubject('');
+        setTo('');
+        setMail('');
+      } else {
+        console.log('Failed to send email');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -24,34 +35,40 @@ const EmailForm = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Container maxWidth="xs">
         <div>
-          <Typography variant="h4" align="center" sx={{ fontWeight: "bold" , paddingBottom:"20px"}}>
+          <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
             Register
           </Typography>
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '700px' }}>
             <TextField
-              id="outlined-multiline-flexible"
+              id="subject"
               label="Subject"
-              type="text"
+              
               fullWidth
               multiline
-              sx={{ width: '100%', paddingBottom: "15px" }}
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              sx={{ width: '100%', paddingBottom: '15px' }}
             />
             <TextField
-              id="outlined-multiline-flexible"
+              id="to"
               label="To"
               type="email"
               fullWidth
               multiline
-              sx={{ width: '100%', paddingBottom: "15px" }}
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              sx={{ width: '100%', paddingBottom: '15px' }}
             />
             <TextField
-              id="outlined-multiline-static"
+              id="mail"
               label="Mail"
               type="text"
               fullWidth
               multiline
               rows={12}
-              sx={{ width: '100%', paddingBottom: "15px" }}
+              value={mail}
+              onChange={(e) => setMail(e.target.value)}
+              sx={{ width: '100%', paddingBottom: '15px' }}
             />
             <Button
               onClick={handleSubmit}
@@ -59,9 +76,9 @@ const EmailForm = () => {
               fullWidth
               variant="contained"
               sx={{
-                fontWeight: "bold",
-                backgroundColor: "#0F1B4C",
-                "&:hover": { backgroundColor: "#fff", color: "#0F1B4C" },
+                fontWeight: 'bold',
+                backgroundColor: '#0F1B4C',
+                '&:hover': { backgroundColor: '#fff', color: '#0F1B4C' },
               }}
             >
               Register
