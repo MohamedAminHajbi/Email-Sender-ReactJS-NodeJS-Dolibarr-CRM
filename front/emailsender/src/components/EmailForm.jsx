@@ -42,11 +42,11 @@ const EmailForm = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', margin:"50px" }}>
       <Container maxWidth="xs">
         <div>
           <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
-            Register
+            Send mail
           </Typography>
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '700px' }}>
             <TextField
@@ -80,7 +80,36 @@ const EmailForm = () => {
               onChange={(e) => setMail(e.target.value)}
               sx={{ width: '100%', paddingBottom: '15px' }}
             />
-            <input type="file" onChange={handleFileChange} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {file && (
+                <Typography variant="subtitle1" sx={{ paddingBottom: '10px'}}>
+                  Selected file: {file.name}
+                </Typography>
+              )}
+              <input
+                type="file"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+                id="file-upload"
+              />
+              <label htmlFor="file-upload">
+                <Button
+                  component="span"
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    fontWeight: 'bold',
+                    borderColor: '#0F1B4C',
+                    color: '#0F1B4C',
+                    '&:hover': { backgroundColor: '#0F1B4C', color: '#fff' },
+                    marginBottom:"17px"
+                  }}
+                >
+                  Upload File
+                </Button>
+              </label>
+            </div>
+
             <Button
               onClick={handleSubmit}
               type="submit"
@@ -92,7 +121,7 @@ const EmailForm = () => {
                 '&:hover': { backgroundColor: '#fff', color: '#0F1B4C' },
               }}
             >
-              Register
+              Send
             </Button>
           </form>
         </div>

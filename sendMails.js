@@ -8,7 +8,7 @@ const app = express();
 const port = 8000;
 
 app.use(cors());
-app.use(express.json()); // Add this line to parse JSON data from the request body
+app.use(express.json());
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
