@@ -5,6 +5,30 @@ const EmailForm = () => {
   const [subject, setSubject] = useState('');
   const [to, setTo] = useState('');
   const [mail, setMail] = useState('');
+  const [file, setFile] = useState(null);
+
+  const handleFileUpload = async (event) => {
+    const formData = new FormData();
+    formData.append('image', event.target.files[0]);
+  
+    try {
+      const response = await fetch('http://localhost:8000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const filePath = await response.text();
+        console.log('File uploaded successfully: ', filePath);
+        // Save the file path or do something with it as needed
+      } else {
+        console.log('Failed to upload file');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,7 +39,7 @@ const EmailForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ subject, to, mail }),
+        body: JSON.stringify({ subject, to, mail,file}),
       });
 
       if (response.ok) {
@@ -23,6 +47,7 @@ const EmailForm = () => {
         setSubject('');
         setTo('');
         setMail('');
+        setFile(null);
       } else {
         console.log('Failed to send email');
       }
@@ -70,6 +95,7 @@ const EmailForm = () => {
               onChange={(e) => setMail(e.target.value)}
               sx={{ width: '100%', paddingBottom: '15px' }}
             />
+            <input type="file" onChange={handleFileUpload} />
             <Button
               onClick={handleSubmit}
               type="submit"
