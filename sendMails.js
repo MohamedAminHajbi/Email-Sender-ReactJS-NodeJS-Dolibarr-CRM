@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const mysql = require('mysql');
 const cors = require('cors');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'uploads/'});
 const app = express();
 const port = 8000;
 
@@ -11,11 +11,11 @@ app.use(cors());
 app.use(express.json());
 
 const dbConfig ={
-  host : '127.0.0.1',
-  user : 'root',
+  host : 'localhost',
+  user : 'dolibarrmysql',
   port : 3306,
   password: '11629747',
-  database : 'test'
+  database : 'dolibarr'
 }
 const connection = mysql.createConnection(dbConfig);
 connection.connect((err)=>{
@@ -36,44 +36,47 @@ const transporter = nodemailer.createTransport({
 });
 
 
-app.post('/send-email', upload.single('file'),(req, res) => {
+app.post('/send-email', upload.array('files',10),(req, res) => {
   const { subject, to, mail } = req.body;
-  const file = req.file;
+  const files = req.files;
 
-  let tableName;
+  let query;
   switch (parseInt(to)){
     case 1:
-      tableName = "Prospect";
+      query = `SELECT email FROM llx_societe WHERE client = 2 OR client = 3`;
       break;
     case 2:
-      tableName = "Client";
+      query = `SELECT email FROM llx_societe WHERE client = 1 OR client = 3`;
       break;
     case 3:
-      tableName = "Fournisseur";
+      query = `SELECT email FROM llx_societe WHERE fournisseur = 1`;
       break;
     default:
       res.status(400).send("Invalid");
       return;
   }
-  const query = `SELECT mail FROM ${tableName}`;
   connection.query(query,(err,results) => {
     if(err){
       console.log(err);
       res.status(500).send("Error fetching emails");
     }
     else{
-      const emails = results.map((result) => result.mail);
+      const emails = results.map((result) => result.email);
       const mailOptions = {
         from: 'mohamedaminehajbi6@gmail.com',
         to: emails.join(','),
         subject: subject,
         text: mail,
-        attachments: [{
-          filename: file.originalname,
-          path:file.path
-        }]
+        attachments: []
       };
-    
+      if (files && files.length > 0) {
+        files.forEach((file) => {
+          mailOptions.attachments.push({
+            filename: file.originalname,
+            path: file.path,
+          });
+        });
+      }
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
@@ -85,9 +88,6 @@ app.post('/send-email', upload.single('file'),(req, res) => {
       });
     }
   })
-
-
-  
 });
 
 app.listen(port, () => {
