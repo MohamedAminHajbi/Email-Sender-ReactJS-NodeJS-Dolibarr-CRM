@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from '@mui/material';
+import { Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 const EmailForm = () => {
@@ -19,7 +19,7 @@ const EmailForm = () => {
     formData.append('subject', subject);
     formData.append('to', to);
     formData.append('mail', mail);
-    formData.append('file', file);
+    formData.append('file', file); 
 
     try {
       const response = await fetch('http://localhost:8000/send-email', {
@@ -42,7 +42,7 @@ const EmailForm = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', margin:"50px" }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', margin:"80px" }}>
       <Container maxWidth="xs">
         <div>
           <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
@@ -52,21 +52,11 @@ const EmailForm = () => {
             <TextField
               id="subject"
               label="Subject"
-              
+              required
               fullWidth
               multiline
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              sx={{ width: '100%', paddingBottom: '15px' }}
-            />
-            <TextField
-              id="to"
-              label="To"
-              type="email"
-              fullWidth
-              multiline
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
               sx={{ width: '100%', paddingBottom: '15px' }}
             />
             <TextField
@@ -75,12 +65,27 @@ const EmailForm = () => {
               type="text"
               fullWidth
               multiline
+              required
               rows={12}
               value={mail}
               onChange={(e) => setMail(e.target.value)}
               sx={{ width: '100%', paddingBottom: '15px' }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label" required>To</InputLabel>
+              <Select
+                id="to"
+                label="To"
+                value={to}
+                required
+                onChange={(e) => setTo(e.target.value)}
+              >
+                <MenuItem value={1}>Prospect</MenuItem>
+                <MenuItem value={2}>Client</MenuItem>
+                <MenuItem value={3}>Fournisseur</MenuItem>
+              </Select>
+            </FormControl>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginTop:"17px" }}>
               {file && (
                 <Typography variant="subtitle1" sx={{ paddingBottom: '10px'}}>
                   Selected file: {file.name}
