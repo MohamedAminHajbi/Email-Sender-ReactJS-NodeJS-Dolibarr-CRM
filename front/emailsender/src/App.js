@@ -1,17 +1,22 @@
 import React from 'react';
-import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import EmailForm from './components/EmailForm';
 import Login from './components/Login';
-import { Container } from '@mui/material';
+import PrivateRoute from './components/PrivateRoute';
 import List from './components/List';
 
 function App() {
   return (
     <Router>
-          <Routes>
-            <Route path="/" element={<List />} />
-            <Route path="/email-form" element={<EmailForm />} />
-          </Routes>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route exact path='/' element={<PrivateRoute/>}>
+            <Route exact path='/email-form' element={<EmailForm/>}/>
+        </Route>
+        <Route exact path='/' element={<PrivateRoute/>}>
+            <Route exact path='/list' element={<List/>}/>
+        </Route>
+      </Routes>
     </Router>
   );
 }

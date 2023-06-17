@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Button, Container, IconButton } from '@mui/material';
-import axios from 'axios';
 
 function Login() {
   const [login, setLogin] = useState('');
@@ -34,6 +33,7 @@ function Login() {
       const data = await response.json();
       const token = data.success.token;
       if (token){
+        localStorage.setItem('token', token);
         window.location.href = '/email-form';
       }
     } catch (error) {
