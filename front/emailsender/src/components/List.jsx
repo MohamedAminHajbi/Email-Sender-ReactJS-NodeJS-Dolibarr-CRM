@@ -3,6 +3,20 @@ import React, { useEffect, useState } from 'react';
 
 const List = () => {
   const [data, setData] = useState([]);
+  const [checked,setChecked] = useState([]);
+
+  const handelChecked = (event) => {
+    let exist = false;
+    if (event.target.checked){
+        for(let i=0;i<checked.length;i++){
+            if (event.target.value === checked[i]) exist = true;
+        }
+        if (event.target.checked && exist == false){
+            setChecked((prevChecked) => [...prevChecked, event.target.value])
+        }
+    }
+    
+  }
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -29,12 +43,13 @@ const List = () => {
             return (
                 <FormControlLabel
                 key={item.id}
-                control={<Checkbox/>}
+                control={<Checkbox />}
                 label={item.name}
+                value={item.email}
                 />
             );
             } else {
-            return null; // If the condition is not met, return null or you can skip this else block if you don't want to render anything in that case.
+            return null;
             }
         })}
         </FormGroup>
