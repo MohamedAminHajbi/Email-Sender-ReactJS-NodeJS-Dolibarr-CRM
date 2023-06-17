@@ -3,12 +3,13 @@ import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-route
 import EmailForm from './components/EmailForm';
 import Login from './components/Login';
 import { Container } from '@mui/material';
+import List from './components/List';
 
 function App() {
   return (
     <Router>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<List />} />
             <Route path="/email-form" element={<EmailForm />} />
           </Routes>
     </Router>
