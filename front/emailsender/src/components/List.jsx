@@ -1,22 +1,33 @@
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const [data, setData] = useState([]);
   const [checked,setChecked] = useState([]);
-
+  const navigate = useNavigate();
   const handelChecked = (event) => {
-    let exist = false;
-    if (event.target.checked){
-        for(let i=0;i<checked.length;i++){
-            if (event.target.value === checked[i]) exist = true;
-        }
-        if (event.target.checked && exist == false){
-            setChecked((prevChecked) => [...prevChecked, event.target.value])
-        }
-    }
     
-  }
+    let exist = false;
+    if (event.target.checked) {
+      for (let i = 0; i < checked.length; i++) {
+        if (event.target.value === checked[i]) exist = true;
+      }
+      if (event.target.checked && exist == false) {
+        setChecked((prevChecked) => [...prevChecked, event.target.value]);
+      }
+    } else {
+      setChecked((prevChecked) =>
+        prevChecked.filter((value) => value !== event.target.value)
+      );
+    }
+  };
+
+  const redirectToEmailForm = () => {
+    navigate('/email-form', { state: { emails: checked } });
+  };
+  
+  
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -41,18 +52,21 @@ const List = () => {
         {data.map((item) => {
             if (item.client == 3 || item.client == 2) {
             return (
-                <FormControlLabel
-                key={item.id}
-                control={<Checkbox />}
-                label={item.name}
-                value={item.email}
-                />
+              <FormControlLabel
+              key={item.id}
+              control={<Checkbox />}
+              label={item.name}
+              value={item.email}
+              onChange={handelChecked} // Add onChange prop
+            />
             );
             } else {
             return null;
             }
         })}
+        
         </FormGroup>
+        <Button variant="text" onClick={redirectToEmailForm}>Send</Button>
     </div>
   );
 };

@@ -1,13 +1,18 @@
-import { Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Button, Container, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import CustomButton from './CustomButton';
+import { useLocation } from 'react-router-dom';
 
 const EmailForm = () => {
+  const location = useLocation();
+  const emails = location.state.emails;
   const [subject, setSubject] = useState('');
-  const [to, setTo] = useState('');
+  const [to, setTo] = useState(emails);
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
+  console.log(to);
 
+  
   const handleFileChange = (e) => {
     const fileList = Array.from(e.target.files);
     setFiles(fileList);
@@ -17,6 +22,7 @@ const EmailForm = () => {
     event.preventDefault();
 
     const formData = new FormData();
+    
     formData.append('subject', subject);
     formData.append('to', to);
     formData.append('mail', mail);
@@ -39,6 +45,7 @@ const EmailForm = () => {
         setFiles([]);
       } else {
         console.log('Failed to send email');
+        console.log(to);
       }
     } catch (error) {
       console.error(error);
@@ -57,17 +64,6 @@ const EmailForm = () => {
               <TextField id="subject" label="Subject" required fullWidth multiline value={subject} onChange={(e) => setSubject(e.target.value)} sx={{ width: '100%', paddingBottom: '15px' }}
               />
               <TextField id="mail" label="Mail" type="text" fullWidth multiline required rows={12} value={mail} onChange={(e) => setMail(e.target.value)} sx={{ width: '100%', paddingBottom: '15px' }}/>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label" required>
-                  To
-                </InputLabel>
-                <Select id="to" label="To" value={to} required onChange={(e) => setTo(e.target.value)}
-                >
-                  <MenuItem value={1}>Prospect</MenuItem>
-                  <MenuItem value={2}>Client</MenuItem>
-                  <MenuItem value={3}>Fournisseur</MenuItem>
-                </Select>
-              </FormControl>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
                 {files.length > 0 &&
                     files.map((file, index) => (

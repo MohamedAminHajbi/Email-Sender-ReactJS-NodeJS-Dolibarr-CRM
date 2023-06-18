@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route exact path='/' element={<PrivateRoute/>}>
             <Route exact path='/email-form' element={<EmailForm/>}/>
         </Route>
