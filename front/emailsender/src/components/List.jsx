@@ -1,33 +1,42 @@
-import { Button, Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Box,
+  Typography,
+} from '@mui/material';
 
 const List = () => {
   const [data, setData] = useState([]);
-  const [checked,setChecked] = useState([]);
+  const [checked, setChecked] = useState([]);
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  };
+
   const handelChecked = (event) => {
-    
-    let exist = false;
-    if (event.target.checked) {
-      for (let i = 0; i < checked.length; i++) {
-        if (event.target.value === checked[i]) exist = true;
-      }
-      if (event.target.checked && exist == false) {
-        setChecked((prevChecked) => [...prevChecked, event.target.value]);
-      }
-    } else {
-      setChecked((prevChecked) =>
-        prevChecked.filter((value) => value !== event.target.value)
-      );
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked && !checked.includes(value)) {
+      setChecked((prevChecked) => [...prevChecked, value]);
+    } else if (!isChecked && checked.includes(value)) {
+      setChecked((prevChecked) => prevChecked.filter((item) => item !== value));
     }
   };
 
   const redirectToEmailForm = () => {
-    navigate('/email-form', { state: { emails: checked } });
+    if (checked.length === 0) {
+      console.log('No email selected.');
+    } else {
+      navigate('/email-form', { state: { emails: checked } });
+    }
   };
-  
-  
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -47,27 +56,45 @@ const List = () => {
   }, []);
 
   return (
-    <div>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Typography variant="h5" component="h2" mb={2}>
+        Prospects List
+      </Typography>
+
       <FormGroup>
         {data.map((item) => {
-            if (item.client == 3 || item.client == 2) {
+          if (item.client === '3' || item.client === '2') {
             return (
               <FormControlLabel
-              key={item.id}
-              control={<Checkbox />}
-              label={item.name}
-              value={item.email}
-              onChange={handelChecked} // Add onChange prop
-            />
+                key={item.id}
+                control={<Checkbox />}
+                label={item.name}
+                value={item.email}
+                onChange={handelChecked}
+                sx={{
+                  '& .MuiCheckbox-root': {
+                    color: '#0F1B4C',
+                  },
+                  '& .Mui-checked': {
+                    color: '#0F1B4C',
+                  },
+                }}
+              />
             );
-            } else {
+          } else {
             return null;
-            }
+          }
         })}
-        
-        </FormGroup>
-        <Button variant="text" onClick={redirectToEmailForm}>Send</Button>
-    </div>
+      </FormGroup>
+
+      <Button variant="contained" onClick={redirectToEmailForm} sx={{ mt: 2, backgroundColor: "#0F1B4C" }}>
+        Send
+      </Button>
+
+      <Button variant="text" onClick={handleLogout} sx={{ mt: 2, color:"#0F1B4C" }}>
+        Logout
+      </Button>
+    </Box>
   );
 };
 

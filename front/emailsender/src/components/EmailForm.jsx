@@ -11,11 +11,14 @@ const EmailForm = () => {
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
   console.log(to);
-
   
   const handleFileChange = (e) => {
     const fileList = Array.from(e.target.files);
     setFiles(fileList);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   };
 
   const handleSubmit = async (event) => {
@@ -80,6 +83,9 @@ const EmailForm = () => {
                 </label>
               </div>
               <CustomButton onClick={handleSubmit} />
+              <Button variant="text" onClick={handleLogout} sx={{ mt: 2, color:"#0F1B4C" }}>
+        Logout
+      </Button>
             </div>
           </form>
         </div>

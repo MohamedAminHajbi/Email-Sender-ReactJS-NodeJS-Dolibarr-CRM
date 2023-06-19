@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Button, Container, IconButton } from '@mui/material';
+import { Button, Container } from '@mui/material';
 
 function Login() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
 
   const handleUsernameChange = (event) => {
     setLogin(event.target.value);
@@ -34,7 +35,7 @@ function Login() {
       const token = data.success.token;
       if (token){
         localStorage.setItem('token', token);
-        window.location.href = '/email-form';
+        window.location.href = '/list';
       }
     } catch (error) {
       console.error('Error authenticating:', error);
