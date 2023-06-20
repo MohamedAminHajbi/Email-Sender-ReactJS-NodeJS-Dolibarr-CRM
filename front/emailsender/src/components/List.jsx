@@ -13,10 +13,11 @@ const List = () => {
   const [data, setData] = useState([]);
   const [checked, setChecked] = useState([]);
   const navigate = useNavigate();
+  console.log(checked);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   const handelChecked = (event) => {

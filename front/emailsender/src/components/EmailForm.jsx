@@ -18,7 +18,7 @@ const EmailForm = () => {
   };
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   const handleSubmit = async (event) => {
@@ -46,9 +46,9 @@ const EmailForm = () => {
         setTo('');
         setMail('');
         setFiles([]);
+        window.location.href = '/list';
       } else {
         console.log('Failed to send email');
-        console.log(to);
       }
     } catch (error) {
       console.error(error);

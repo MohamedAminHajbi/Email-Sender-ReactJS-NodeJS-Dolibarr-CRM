@@ -9,9 +9,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route exact path='/list' element={<PrivateRoute/>}>
-            <Route exact path='/list' element={<List/>}/>
+            <Route exact path='/list' element={<List/>}/>d
         </Route>
         <Route exact path='/email-form' element={<PrivateRoute/>}>
             <Route exact path='/email-form' element={<EmailForm/>}/>

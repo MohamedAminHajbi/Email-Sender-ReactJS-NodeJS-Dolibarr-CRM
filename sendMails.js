@@ -24,12 +24,10 @@ const transporter = nodemailer.createTransport({
 app.post('/send-email', upload.array('files',10),(req, res) => {
   const { subject, to, mail } = req.body;
   const files = req.files;
-  
-  
-  for(let i=0;i<to.length;i++){
+
     const mailOptions = {
       from: 'mohamedaminehajbi6@gmail.com',
-      to: to[i],
+      to: to,
       subject: subject,
       text: mail,
       attachments: []
@@ -52,10 +50,7 @@ app.post('/send-email', upload.array('files',10),(req, res) => {
       }
     });
   }
-    
-  
-      
-});
+);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

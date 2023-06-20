@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Button, Container } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 
 function Login() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
 
   const handleUsernameChange = (event) => {
     setLogin(event.target.value);
@@ -18,22 +17,25 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
-      const response = await fetch('http://localhost/dolibarr/api/index.php/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          login: login,
-          password: password,
-        }),
-      });
-  
+      const response = await fetch(
+        'http://localhost/dolibarr/api/index.php/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            login: login,
+            password: password,
+          }),
+        }
+      );
+
       const data = await response.json();
       const token = data.success.token;
-      if (token){
+      if (token) {
         localStorage.setItem('token', token);
         window.location.href = '/list';
       }
@@ -42,11 +44,22 @@ function Login() {
       setError('An error occurred while authenticating');
     }
   };
-  
 
   return (
-    <Container maxWidth="xs" sx={{ alignSelf: 'center' }}>
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '80vh',
+      }}
+    >
       <form onSubmit={handleSubmit}>
+        <Typography variant="h4" align="center" sx={{ fontWeight: 'bold' }}>
+          Login
+        </Typography>
         <TextField
           variant="standard"
           margin="normal"
