@@ -38,7 +38,7 @@ function Login() {
       const token = data.success.token;
       if (token) {
         localStorage.setItem('token', token);
-        window.location.href = '/list';
+        window.location.href = '/email-form';
       }
     } catch (error) {
       console.error('Error authenticating:', error);

@@ -1,8 +1,7 @@
 import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox, AppBar, Toolbar, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useState } from 'react';
-import CustomButton from './CustomButton'; 
-import { useLocation } from 'react-router-dom';
+import CustomButton from './CustomButton';
 
 const EmailForm = () => {
   const [subject, setSubject] = useState('');
@@ -33,7 +32,7 @@ const EmailForm = () => {
   useEffect(() => {
     const fetchProspects = async () => {
       try {
-        const apiKey = window.localStorage.getItem("token");
+        const apiKey = window.localStorage.getItem('token');
         const url = `http://localhost/dolibarr/api/index.php/thirdparties?DOLAPIKEY=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -88,55 +87,59 @@ const EmailForm = () => {
 
   return (
     <Box>
-      <AppBar position='static'>
+      <AppBar position="static" sx={{ backgroundColor: '#2B3A3E' }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleSidebarToggle}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            My App
+           
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>Logout</Button>
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Box display="flex" flexGrow={1}>
         <Box
-          bgcolor="#f2f2f2"
-          width="300px"
+          bgcolor="#ECECEE"
+          width={sidebarOpen ? '240px' : '0px'}
           p={2}
           display={sidebarOpen ? 'flex' : 'none'}
+          transition="width 0.2s ease-in-out"
           flexDirection="column"
           alignItems="center"
         >
           <Typography variant="h6" component="h2" mb={2}>
             Prospects list
           </Typography>
-          <Box sx={{display:"flex", flexDirection:"column"}}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {data.map((item) => {
-            if (item.client === '3' || item.client === '2') {
-              return (
-                <FormControlLabel
-                  key={item.id}
-                  control={<Checkbox />}
-                  label={item.name}
-                  value={item.email}
-                  onChange={handelChecked}
-                  sx={{
-                    '& .MuiCheckbox-root': {
-                      color: '#0F1B4C',
-                    },
-                    '& .Mui-checked': {
-                      color: '#0F1B4C',
-                    },
-                  }}
-                />
-              );
-            } else {
-              return null;
-            }
-          })}
+              if (item.client === '3' || item.client === '2') {
+                return (
+                  <FormControlLabel
+                    key={item.id}
+                    control={<Checkbox />}
+                    label={item.name}
+                    value={item.email}
+                    onChange={handelChecked}
+                    
+                    sx={{
+                      '& .MuiCheckbox-root': {
+                        color: '#2B3A3E',
+                      },
+                      '& .Mui-checked': {
+                        color: '#2B3A3E',
+                      },
+                      
+                    }}
+                  />
+                );
+              } else {
+                return null;
+              }
+            })}
           </Box>
-          
         </Box>
         <Container
           sx={{
@@ -146,14 +149,14 @@ const EmailForm = () => {
             alignItems: 'center',
             flexDirection: 'column',
             flexGrow: 1,
+            backgroundColor:"#fff"
           }}
-          
         >
-          <div style={{ width: "700px", maxWidth: '100%', marginLeft: sidebarOpen ? 'auto' : '0', marginRight: sidebarOpen ? 'auto' : '0' }}>
+          <div style={{ width: '100%', maxWidth: '700px' }}>
             <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
               Send mail
             </Typography>
-            <form onSubmit={handleSubmit} >
+            <form onSubmit={handleSubmit}>
               <div>
                 <TextField
                   id="subject"
@@ -178,32 +181,32 @@ const EmailForm = () => {
                   sx={{ width: '100%', paddingBottom: '15px' }}
                 />
                 <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" width="100%">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
-                  {files.length > 0 &&
-                    files.map((file, index) => (
-                      <Typography key={index} variant="subtitle1" sx={{ paddingBottom: '10px' }}>
-                        Selected file {index + 1}: {file.name}
-                      </Typography>
-                    ))}
-                  <input type="file" onChange={handleFileChange} style={{ display: 'none' }} id="file-upload" multiple />
-                  <label htmlFor="file-upload">
-                    <Button
-                      component="span"
-                      fullWidth
-                      variant="outlined"
-                      sx={{
-                        fontWeight: 'bold',
-                        borderColor: '#0F1B4C',
-                        color: '#0F1B4C',
-                        borderRadius: '0px',
-                        '&:hover': { backgroundColor: '#0F1B4C', color: '#fff' },
-                        marginBottom: '17px',
-                      }}
-                    >
-                      Upload File
-                    </Button>
-                  </label>
-                </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
+                    {files.length > 0 &&
+                      files.map((file, index) => (
+                        <Typography key={index} variant="subtitle1" sx={{ paddingBottom: '10px' }}>
+                          Selected file {index + 1}: {file.name}
+                        </Typography>
+                      ))}
+                    <input type="file" onChange={handleFileChange} style={{ display: 'none' }} id="file-upload" multiple />
+                    <label htmlFor="file-upload">
+                      <Button
+                        component="span"
+                        fullWidth
+                        variant="outlined"
+                        sx={{
+                          fontWeight: 'bold',
+                          borderColor: '#2B3A3E',
+                          color: '#2B3A3E',
+                          borderRadius: '0px',
+                          '&:hover': { backgroundColor: '#2B3A3E', color: '#fff' },
+                          marginBottom: '17px',
+                        }}
+                      >
+                        Upload File
+                      </Button>
+                    </label>
+                  </div>
                   <Box marginTop="20px">
                     <CustomButton onClick={handleSubmit} />
                   </Box>
