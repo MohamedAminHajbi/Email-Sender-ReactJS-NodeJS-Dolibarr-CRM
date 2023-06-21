@@ -42,7 +42,7 @@ const List = () => {
   useEffect(() => {
     const fetchProspects = async () => {
       try {
-        const apiKey = 'd41ff35672158204318e18d8637eba48a327090b';
+        const apiKey = window.localStorage.getItem("token");
         const url = `http://localhost/dolibarr/api/index.php/thirdparties?DOLAPIKEY=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -57,8 +57,8 @@ const List = () => {
   }, []);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <Typography variant="h5" component="h2" mb={2}>
+    <Box display="flex" flexDirection="column" alignItems="center" sx={{paddingTop:"70px"}}>
+      <Typography variant="h4" component="h2" mb={2}>
         Prospects List
       </Typography>
 

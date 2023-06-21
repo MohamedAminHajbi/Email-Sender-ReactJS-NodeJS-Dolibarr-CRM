@@ -34,6 +34,7 @@ function Login() {
       );
 
       const data = await response.json();
+      
       const token = data.success.token;
       if (token) {
         localStorage.setItem('token', token);
@@ -41,7 +42,7 @@ function Login() {
       }
     } catch (error) {
       console.error('Error authenticating:', error);
-      setError('An error occurred while authenticating');
+      setError('Username or password incorrect !');
     }
   };
 
@@ -49,7 +50,6 @@ function Login() {
     <Container
       maxWidth="xs"
       sx={{
-        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

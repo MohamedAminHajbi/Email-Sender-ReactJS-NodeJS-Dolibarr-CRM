@@ -1,38 +1,66 @@
-import { Button, Container, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import CustomButton from './CustomButton';
+import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox, AppBar, Toolbar, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import React, { useEffect, useState } from 'react';
+import CustomButton from './CustomButton'; 
 import { useLocation } from 'react-router-dom';
 
 const EmailForm = () => {
-  const location = useLocation();
-  const emails = location.state.emails;
   const [subject, setSubject] = useState('');
-  const [to, setTo] = useState(emails);
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
-  console.log(to);
-  
-  const handleFileChange = (e) => {
-    const fileList = Array.from(e.target.files);
-    setFiles(fileList);
-  };
+  const [data, setData] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Track sidebar state
+
+  console.log(checked);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
   };
 
+  const handelChecked = (event) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked && !checked.includes(value)) {
+      setChecked((prevChecked) => [...prevChecked, value]);
+    } else if (!isChecked && checked.includes(value)) {
+      setChecked((prevChecked) => prevChecked.filter((item) => item !== value));
+    }
+  };
+
+  useEffect(() => {
+    const fetchProspects = async () => {
+      try {
+        const apiKey = window.localStorage.getItem("token");
+        const url = `http://localhost/dolibarr/api/index.php/thirdparties?DOLAPIKEY=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProspects();
+  }, []);
+
+  const handleFileChange = (e) => {
+    const fileList = Array.from(e.target.files);
+    setFiles(fileList);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const formData = new FormData();
-    
     formData.append('subject', subject);
-    formData.append('to', to);
+    formData.append('to', checked);
     formData.append('mail', mail);
     files.forEach((file) => {
       formData.append('files', file);
     });
-
 
     try {
       const response = await fetch('http://localhost:8000/send-email', {
@@ -43,10 +71,9 @@ const EmailForm = () => {
       if (response.ok) {
         console.log('Email sent');
         setSubject('');
-        setTo('');
+        setChecked([]);
         setMail('');
         setFiles([]);
-        window.location.href = '/list';
       } else {
         console.log('Failed to send email');
       }
@@ -55,42 +82,138 @@ const EmailForm = () => {
     }
   };
 
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '40px' }}>
-      <Container maxWidth="xs">
-        <div>
-          <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
-            Send mail
+    <Box>
+      <AppBar position='static'>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleSidebarToggle}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            My App
           </Typography>
-          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '700px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <TextField id="subject" label="Subject" required fullWidth multiline value={subject} onChange={(e) => setSubject(e.target.value)} sx={{ width: '100%', paddingBottom: '15px' }}
-              />
-              <TextField id="mail" label="Mail" type="text" fullWidth multiline required rows={12} value={mail} onChange={(e) => setMail(e.target.value)} sx={{ width: '100%', paddingBottom: '15px' }}/>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
-                {files.length > 0 &&
+          <Button color="inherit" onClick={handleLogout}>Logout</Button>
+        </Toolbar>
+      </AppBar>
+      <Box display="flex" flexGrow={1}>
+        <Box
+          bgcolor="#f2f2f2"
+          width="300px"
+          p={2}
+          display={sidebarOpen ? 'flex' : 'none'}
+          flexDirection="column"
+          alignItems="center"
+        >
+          <Typography variant="h6" component="h2" mb={2}>
+            Prospects list
+          </Typography>
+          <Box sx={{display:"flex", flexDirection:"column"}}>
+            {data.map((item) => {
+            if (item.client === '3' || item.client === '2') {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handelChecked}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+            } else {
+              return null;
+            }
+          })}
+          </Box>
+          
+        </Box>
+        <Container
+          sx={{
+            padding: '40px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            flexGrow: 1,
+          }}
+          
+        >
+          <div style={{ width: "700px", maxWidth: '100%', marginLeft: sidebarOpen ? 'auto' : '0', marginRight: sidebarOpen ? 'auto' : '0' }}>
+            <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
+              Send mail
+            </Typography>
+            <form onSubmit={handleSubmit} >
+              <div>
+                <TextField
+                  id="subject"
+                  label="Subject"
+                  required
+                  fullWidth
+                  multiline
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  sx={{ width: '100%', paddingBottom: '15px' }}
+                />
+                <TextField
+                  id="mail"
+                  label="Mail"
+                  type="text"
+                  fullWidth
+                  multiline
+                  required
+                  rows={12}
+                  value={mail}
+                  onChange={(e) => setMail(e.target.value)}
+                  sx={{ width: '100%', paddingBottom: '15px' }}
+                />
+                <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" width="100%">
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
+                  {files.length > 0 &&
                     files.map((file, index) => (
                       <Typography key={index} variant="subtitle1" sx={{ paddingBottom: '10px' }}>
                         Selected file {index + 1}: {file.name}
                       </Typography>
-                    ))
-                }
-                <input type="file" onChange={handleFileChange} style={{ display: 'none' }} id="file-upload" multiple />
-                <label htmlFor="file-upload">
-                  <Button component="span" fullWidth variant="outlined" sx={{ fontWeight: 'bold', borderColor: '#0F1B4C', color: '#0F1B4C', borderRadius:"0px", '&:hover': { backgroundColor: '#0F1B4C', color: '#fff' }, marginBottom: '17px',}}>
-                    Upload File
-                  </Button>
-                </label>
+                    ))}
+                  <input type="file" onChange={handleFileChange} style={{ display: 'none' }} id="file-upload" multiple />
+                  <label htmlFor="file-upload">
+                    <Button
+                      component="span"
+                      fullWidth
+                      variant="outlined"
+                      sx={{
+                        fontWeight: 'bold',
+                        borderColor: '#0F1B4C',
+                        color: '#0F1B4C',
+                        borderRadius: '0px',
+                        '&:hover': { backgroundColor: '#0F1B4C', color: '#fff' },
+                        marginBottom: '17px',
+                      }}
+                    >
+                      Upload File
+                    </Button>
+                  </label>
+                </div>
+                  <Box marginTop="20px">
+                    <CustomButton onClick={handleSubmit} />
+                  </Box>
+                </Box>
               </div>
-              <CustomButton onClick={handleSubmit} />
-              <Button variant="text" onClick={handleLogout} sx={{ mt: 2, color:"#0F1B4C" }}>
-        Logout
-      </Button>
-            </div>
-          </form>
-        </div>
-      </Container>
-    </div>
+            </form>
+          </div>
+        </Container>
+      </Box>
+    </Box>
   );
 };
 
