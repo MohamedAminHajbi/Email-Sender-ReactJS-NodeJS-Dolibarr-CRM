@@ -37,11 +37,22 @@ const EmailForm = () => {
         const response = await fetch(url);
         const allData = await response.json();
         const data = allData.filter((item)=>item.client === '3' || item.client === '2');
-        const ids = [];
-        data.forEach((item)=>{ids.push(item.id)});
+        const ids = data.map((item) => item.id); // Use map instead of forEach
         console.log(ids);
-        console.log()
-        //const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${id}/representatives`;
+        const reps = {};
+        console.log(ids);
+        for (const id of ids) {
+          const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${id}/representatives?DOLAPIKEY=${apiKey}`;
+          const res = await fetch(urlComm);
+          const repData = await res.json();
+          repData.forEach((item) => {
+            reps[item.login] = id;
+          })
+          
+          
+        }
+        console.log(reps)
+        
         setData(data);
         console.log(data);
       } catch (error) {
