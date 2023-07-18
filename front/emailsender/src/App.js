@@ -10,7 +10,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        
         <Route exact path='/email-form' element={<PrivateRoute/>}>
             <Route exact path='/email-form' element={<EmailForm/>}/>
         </Route>

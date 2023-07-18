@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Button, Container, Typography } from '@mui/material';
 
+
 function Login() {
+
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -50,6 +52,7 @@ function Login() {
     <Container
       maxWidth="xs"
       sx={{
+        display : 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

@@ -9,9 +9,6 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-
-
-
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {

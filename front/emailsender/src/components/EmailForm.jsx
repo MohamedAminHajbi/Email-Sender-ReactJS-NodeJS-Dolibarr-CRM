@@ -35,7 +35,13 @@ const EmailForm = () => {
         const apiKey = window.localStorage.getItem('token');
         const url = `http://localhost/dolibarr/api/index.php/thirdparties?DOLAPIKEY=${apiKey}`;
         const response = await fetch(url);
-        const data = await response.json();
+        const allData = await response.json();
+        const data = allData.filter((item)=>item.client === '3' || item.client === '2');
+        const ids = [];
+        data.forEach((item)=>{ids.push(item.id)});
+        console.log(ids);
+        console.log()
+        //const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${id}/representatives`;
         setData(data);
         console.log(data);
       } catch (error) {
@@ -115,7 +121,6 @@ const EmailForm = () => {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             {data.map((item) => {
-              if (item.client === '3' || item.client === '2') {
                 return (
                   <FormControlLabel
                     key={item.id}
@@ -135,9 +140,6 @@ const EmailForm = () => {
                     }}
                   />
                 );
-              } else {
-                return null;
-              }
             })}
           </Box>
         </Box>
