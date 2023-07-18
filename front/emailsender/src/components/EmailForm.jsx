@@ -9,25 +9,49 @@ const EmailForm = () => {
   const [files, setFiles] = useState([]);
   const [data, setData] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false); // Track sidebar state
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [reps, setReps] = useState({});
+  
   console.log(checked);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
   };
+  const removeArray = (mainArray, arrayToRemove) => {
+    const counts = {};
 
+    for (const item of mainArray) {
+      counts[item] = (counts[item] || 0) + 1;
+    }
+    for (const item of arrayToRemove) {
+      counts[item] = (counts[item] || 0) - 1;
+    }
+    const result = [];
+    for (const item of mainArray) {
+      if (counts[item] > 0) {
+        result.push(item);
+        counts[item]--;
+      }
+    }
+    
+    return result;
+  };
+  
   const handelChecked = (event) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
-
-    if (isChecked && !checked.includes(value)) {
-      setChecked((prevChecked) => [...prevChecked, value]);
-    } else if (!isChecked && checked.includes(value)) {
-      setChecked((prevChecked) => prevChecked.filter((item) => item !== value));
+  
+    if (isChecked) {
+      setChecked((prevChecked) => [...prevChecked, ...reps[value]]);
+    } else {
+      setChecked((prevChecked) => removeArray(prevChecked, reps[value]));
     }
   };
+  
+  
+  
+  
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -37,22 +61,27 @@ const EmailForm = () => {
         const response = await fetch(url);
         const allData = await response.json();
         const data = allData.filter((item)=>item.client === '3' || item.client === '2');
-        const ids = data.map((item) => item.id); // Use map instead of forEach
+        const ids = data.map((item) => item.id);
         console.log(ids);
         const reps = {};
-        console.log(ids);
+
         for (const id of ids) {
           const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${id}/representatives?DOLAPIKEY=${apiKey}`;
           const res = await fetch(urlComm);
           const repData = await res.json();
+          const emails = allData.map((item)=>item.email);
           repData.forEach((item) => {
-            reps[item.login] = id;
-          })
-          
-          
+            const login = item.login;
+            if (reps[login]) {
+              reps[login].push(id);
+            } else {
+              reps[login] = [id];
+            }
+          });
         }
-        console.log(reps)
-        
+
+        setReps(reps); // Update reps state
+
         setData(data);
         console.log(data);
       } catch (error) {
@@ -131,27 +160,23 @@ const EmailForm = () => {
             Prospects list
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {data.map((item) => {
-                return (
-                  <FormControlLabel
-                    key={item.id}
-                    control={<Checkbox />}
-                    label={item.name}
-                    value={item.email}
-                    onChange={handelChecked}
-                    
-                    sx={{
-                      '& .MuiCheckbox-root': {
-                        color: '#2B3A3E',
-                      },
-                      '& .Mui-checked': {
-                        color: '#2B3A3E',
-                      },
-                      
-                    }}
-                  />
-                );
-            })}
+            {Object.keys(reps).map((login) => (
+              <FormControlLabel
+                key={login}
+                control={<Checkbox />}
+                label={login}
+                value={login}
+                onChange={handelChecked}
+                sx={{
+                  '& .MuiCheckbox-root': {
+                    color: '#2B3A3E',
+                  },
+                  '& .Mui-checked': {
+                    color: '#2B3A3E',
+                  },
+                }}
+              />
+            ))}
           </Box>
         </Box>
         <Container
