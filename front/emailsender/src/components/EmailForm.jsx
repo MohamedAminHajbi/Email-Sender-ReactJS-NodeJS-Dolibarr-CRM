@@ -48,10 +48,6 @@ const EmailForm = () => {
       setChecked((prevChecked) => removeArray(prevChecked, reps[value]));
     }
   };
-  
-  
-  
-  
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -61,27 +57,27 @@ const EmailForm = () => {
         const response = await fetch(url);
         const allData = await response.json();
         const data = allData.filter((item)=>item.client === '3' || item.client === '2');
+        const emails = data.map((item) => item.email);
         const ids = data.map((item) => item.id);
         console.log(ids);
+        console.log(emails);
         const reps = {};
 
-        for (const id of ids) {
-          const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${id}/representatives?DOLAPIKEY=${apiKey}`;
+        for (let i = 0; i < ids.length; i++) {
+          const urlComm = `http://localhost/dolibarr/api/index.php/thirdparties/${ids[i]}/representatives?DOLAPIKEY=${apiKey}`;
           const res = await fetch(urlComm);
           const repData = await res.json();
-          const emails = allData.map((item)=>item.email);
+          
           repData.forEach((item) => {
             const login = item.login;
             if (reps[login]) {
-              reps[login].push(id);
+              reps[login].push(emails[i]);
             } else {
-              reps[login] = [id];
+              reps[login] = [emails[i]];
             }
           });
         }
-
-        setReps(reps); // Update reps state
-
+        setReps(reps);
         setData(data);
         console.log(data);
       } catch (error) {
@@ -98,6 +94,8 @@ const EmailForm = () => {
   };
 
   const handleSubmit = async (event) => {
+    const newChecked = checked.filter((item, index) => checked.indexOf(item) === index);
+    setChecked(newChecked);
     event.preventDefault();
     const formData = new FormData();
     formData.append('subject', subject);
