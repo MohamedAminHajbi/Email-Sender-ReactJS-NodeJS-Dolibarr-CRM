@@ -1,10 +1,12 @@
 import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox, AppBar, Toolbar, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
-import TextEditor from './TextEditor';
+import DOMPurify from 'dompurify';
 
-const EmailForm = () => {
+import JoditEditor from 'jodit-react';
+
+const EmailForm = ({placeholder}) => {
   const [subject, setSubject] = useState('');
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
@@ -12,6 +14,7 @@ const EmailForm = () => {
   const [checked, setChecked] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reps, setReps] = useState({});
+  const editor = useRef(null);
   
   console.log(checked);
 
@@ -95,9 +98,9 @@ const EmailForm = () => {
   };
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
     const newChecked = checked.filter((item, index) => checked.indexOf(item) === index);
     setChecked(newChecked);
-    event.preventDefault();
     const formData = new FormData();
     formData.append('subject', subject);
     formData.append('to', checked);
@@ -205,19 +208,16 @@ const EmailForm = () => {
                   onChange={(e) => setSubject(e.target.value)}
                   sx={{ width: '100%', paddingBottom: '15px' }}
                 />
-                <TextEditor/>
-                <TextField
-                  id="mail"
-                  label="Mail"
-                  type="text"
-                  fullWidth
-                  multiline
-                  required
-                  rows={12}
-                  value={mail}
-                  onChange={(e) => setMail(e.target.value)}
-                  sx={{ width: '100%', paddingBottom: '15px' }}
+                <div>
+                  <JoditEditor
+                ref={editor}
+                value={mail}
+                tabIndex={1}
+                onChange={(e) => setMail(e)}
                 />
+                </div>
+                
+                
                 <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" width="100%">
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '17px' }}>
                     {files.length > 0 &&

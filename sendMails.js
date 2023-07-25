@@ -26,7 +26,7 @@ app.post('/send-email', upload.array('files',10),(req, res) => {
       from: 'mohamedaminehajbi6@gmail.com',
       to: to,
       subject: subject,
-      text: mail,
+      html: mail,
       attachments: []
     };
     if (files && files.length > 0) {
