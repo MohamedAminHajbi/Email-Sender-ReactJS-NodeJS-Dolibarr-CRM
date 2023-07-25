@@ -2,6 +2,7 @@ import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkb
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useState } from 'react';
 import CustomButton from './CustomButton';
+import TextEditor from './TextEditor';
 
 const EmailForm = () => {
   const [subject, setSubject] = useState('');
@@ -204,6 +205,7 @@ const EmailForm = () => {
                   onChange={(e) => setSubject(e.target.value)}
                   sx={{ width: '100%', paddingBottom: '15px' }}
                 />
+                <TextEditor/>
                 <TextField
                   id="mail"
                   label="Mail"
