@@ -1,19 +1,16 @@
-import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox, AppBar, Toolbar, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox} from '@mui/material';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
-import HtmlToText from 'html-to-text';
 import LogoutButton from './LogoutButton/LogoutButton'
-
 import JoditEditor from 'jodit-react';
 
-const EmailForm = ({placeholder}) => {
+const EmailForm = () => {
   const [subject, setSubject] = useState('');
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
   const [data, setData] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reps, setReps] = useState({});
   const editor = useRef(null);
   
@@ -135,8 +132,8 @@ const EmailForm = ({placeholder}) => {
   };
 
   return (
-    <Box>
-      <Box display="flex" flexGrow={1} sx={{ height:"100vh"}}>
+    <Box height="100vh">
+      <Box display="flex" flexGrow={1} sx={{height:"100%",backgroundColor:"#EDEDED"}}>
       <Box
           onClick={handleSidebarToggle}
           width={sidebarOpen ? '240px' : '20px'}
@@ -145,13 +142,13 @@ const EmailForm = ({placeholder}) => {
           flexDirection="column"
           alignItems="center"
           sx={{
-            transition: 'width 0.3s', // CSS transition property for width
-            overflow: 'hidden', // Hides the content when the width is reduced
-            cursor:"pointer",
-            borderTopRightRadius:"25px",
-            backgroundColor:"#D3D4D4",
-            borderBottomRightRadius:"25px"
             
+            transition: 'width 0.3s',
+            overflow: 'hidden',
+            cursor:"pointer",
+            borderRadius:"25px",
+            backgroundColor:"#D3D4D4",
+            margin:"10px",
           }}
         >
           <Box display={sidebarOpen ? 'flex' : 'none'} sx={{flexDirection:"column", alignitems: "center", justifycontent:"center"}}>
@@ -181,19 +178,18 @@ const EmailForm = ({placeholder}) => {
 
         </Box>
         
-        <Container sx={{backgroundColor:"#fff",width:"100%"}}>
+        <Container sx={{width:"100%"}}>
         <div style={{width:"100%", paddingTop: "20px", display:"flex", justifyContent:"end"}}>
             <LogoutButton logout={handleLogout}/>
         </div>
         <Container
           sx={{
+            display:"flex",
             height:"100%",
-            display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
             flexGrow: 1,
-            backgroundColor:"#fff",
             width:"100%"
           }}
         >
@@ -262,6 +258,8 @@ const EmailForm = ({placeholder}) => {
         </Container>
       </Box>
     </Box>
+      
+    
   );
 };
 

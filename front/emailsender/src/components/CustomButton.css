@@ -3,7 +3,7 @@
  border: 2px solid #2B3A3E;
  border-radius: 0;
  box-sizing: border-box;
- color: #fff;
+ color: #EDEDED;
  cursor: pointer;
  display: inline-block;
  float: right;
@@ -53,7 +53,7 @@
  top: -2px;
  left: 0.625rem;
  position: absolute;
- background: #fff;
+ background: #EDEDED;
  transition: width 0.5s ease-out, left 0.3s ease-out;
 }
 
@@ -63,7 +63,7 @@
  right: 1.875rem;
  bottom: -2px;
  position: absolute;
- background: #fff;
+ background: #EDEDED;
  transition: width 0.5s ease-out, right 0.3s ease-out;
 }
 
@@ -73,7 +73,7 @@
  right: 0.625rem;
  bottom: -2px;
  position: absolute;
- background: #fff;
+ background: #EDEDED;
  transition: width 0.5s ease-out, right 0.3s ease-out;
 }
 
