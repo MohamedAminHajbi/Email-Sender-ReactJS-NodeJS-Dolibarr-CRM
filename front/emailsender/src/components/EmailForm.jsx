@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
 import HtmlToText from 'html-to-text';
+import LogoutButton from './LogoutButton/LogoutButton'
 
 import JoditEditor from 'jodit-react';
 
@@ -153,8 +154,6 @@ const EmailForm = ({placeholder}) => {
             
           }}
         >
-           
-          
           <Box display={sidebarOpen ? 'flex' : 'none'} sx={{flexDirection:"column", alignitems: "center", justifycontent:"center"}}>
             <Typography variant="h6" component="h2" mb={2}>
               Prospects list
@@ -181,19 +180,23 @@ const EmailForm = ({placeholder}) => {
           </Box>
 
         </Box>
-      
+        
+        <Container sx={{backgroundColor:"#fff",width:"100%"}}>
+        <div style={{width:"100%", paddingTop: "20px", display:"flex", justifyContent:"end"}}>
+            <LogoutButton logout={handleLogout}/>
+        </div>
         <Container
           sx={{
-            padding: '40px',
+            height:"100%",
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
             flexGrow: 1,
-            backgroundColor:"#fff"
+            backgroundColor:"#fff",
+            width:"100%"
           }}
         >
-          <div style={{width:"100%"}}></div>
           <div style={{ width: '100%', maxWidth: '700px' }}>
             <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
               Send mail
@@ -254,6 +257,8 @@ const EmailForm = ({placeholder}) => {
               </div>
             </form>
           </div>
+        </Container>
+          
         </Container>
       </Box>
     </Box>
