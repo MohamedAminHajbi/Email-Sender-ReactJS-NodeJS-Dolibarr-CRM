@@ -12,7 +12,7 @@ const EmailForm = ({placeholder}) => {
   const [files, setFiles] = useState([]);
   const [data, setData] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [reps, setReps] = useState({});
   const editor = useRef(null);
   
@@ -135,52 +135,53 @@ const EmailForm = ({placeholder}) => {
 
   return (
     <Box>
-      <AppBar position="static" sx={{ backgroundColor: '#2B3A3E' }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleSidebarToggle}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-           
-          </Typography>
-          <Button color="inherit" onClick={handleLogout}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Box display="flex" flexGrow={1}>
-        <Box
-          bgcolor="#ECECEE"
-          width={sidebarOpen ? '240px' : '0px'}
+      <Box display="flex" flexGrow={1} sx={{ height:"100vh"}}>
+      <Box
+          onClick={handleSidebarToggle}
+          width={sidebarOpen ? '240px' : '20px'}
           p={2}
-          display={sidebarOpen ? 'flex' : 'none'}
-          transition="width 0.2s ease-in-out"
+          display='flex'
           flexDirection="column"
           alignItems="center"
+          sx={{
+            transition: 'width 0.3s', // CSS transition property for width
+            overflow: 'hidden', // Hides the content when the width is reduced
+            cursor:"pointer",
+            borderTopRightRadius:"25px",
+            backgroundColor:"#D3D4D4",
+            borderBottomRightRadius:"25px"
+            
+          }}
         >
-          <Typography variant="h6" component="h2" mb={2}>
-            Prospects list
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {Object.keys(reps).map((login) => (
-              <FormControlLabel
-                key={login}
-                control={<Checkbox />}
-                label={login}
-                value={login}
-                onChange={handelChecked}
-                sx={{
-                  '& .MuiCheckbox-root': {
-                    color: '#2B3A3E',
-                  },
-                  '& .Mui-checked': {
-                    color: '#2B3A3E',
-                  },
-                }}
-              />
-            ))}
+           
+          
+          <Box display={sidebarOpen ? 'flex' : 'none'} sx={{flexDirection:"column", alignitems: "center", justifycontent:"center"}}>
+            <Typography variant="h6" component="h2" mb={2}>
+              Prospects list
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              {Object.keys(reps).map((login) => (
+                <FormControlLabel
+                  key={login}
+                  control={<Checkbox />}
+                  label={login}
+                  value={login}
+                  onChange={handelChecked}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#2B3A3E',
+                    },
+                    '& .Mui-checked': {
+                      color: '#2B3A3E',
+                    },
+                  }}
+                />
+              ))}
+            </Box>
           </Box>
+
         </Box>
+      
         <Container
           sx={{
             padding: '40px',
@@ -192,6 +193,7 @@ const EmailForm = ({placeholder}) => {
             backgroundColor:"#fff"
           }}
         >
+          <div style={{width:"100%"}}></div>
           <div style={{ width: '100%', maxWidth: '700px' }}>
             <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', paddingBottom: '20px' }}>
               Send mail
