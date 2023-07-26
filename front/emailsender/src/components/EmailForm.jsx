@@ -2,7 +2,7 @@ import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkb
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
-import DOMPurify from 'dompurify';
+import HtmlToText from 'html-to-text';
 
 import JoditEditor from 'jodit-react';
 
