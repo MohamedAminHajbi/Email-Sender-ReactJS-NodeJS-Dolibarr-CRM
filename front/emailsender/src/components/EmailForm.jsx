@@ -1,5 +1,5 @@
 import { Button, Container, TextField, Typography, Box, FormControlLabel, Checkbox} from '@mui/material';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
 import LogoutButton from './LogoutButton/LogoutButton'
 import JoditEditor from 'jodit-react';
@@ -43,13 +43,22 @@ const EmailForm = () => {
   const handelChecked = (event) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
-  
+
     if (isChecked) {
-      setChecked((prevChecked) => [...prevChecked, ...reps[value]]);
+      if (Array.isArray(reps[value])) {
+        setChecked((prevChecked) => [...prevChecked, ...reps[value]]);
+      } else if (reps[value] !== undefined) {
+        setChecked((prevChecked) => [...prevChecked, reps[value]]);
+      }
     } else {
-      setChecked((prevChecked) => removeArray(prevChecked, reps[value]));
+      if (Array.isArray(reps[value])) {
+        setChecked((prevChecked) => removeArray(prevChecked, reps[value]));
+      } else if (reps[value] !== undefined) {
+        setChecked((prevChecked) => prevChecked.filter(item => item !== reps[value]));
+      }
     }
   };
+  
 
   useEffect(() => {
     const fetchProspects = async () => {
@@ -63,6 +72,7 @@ const EmailForm = () => {
         const ids = data.map((item) => item.id);
         console.log(ids);
         console.log(emails);
+        
         const reps = {};
 
         for (let i = 0; i < ids.length; i++) {
@@ -153,7 +163,7 @@ const EmailForm = () => {
         >
           <Box display={sidebarOpen ? 'flex' : 'none'} sx={{flexDirection:"column", alignitems: "center", justifycontent:"center"}}>
             <Typography variant="h6" component="h2" mb={2}>
-              Prospects list
+              Liste des représentants
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {Object.keys(reps).map((login) => (
@@ -174,6 +184,30 @@ const EmailForm = () => {
                 />
               ))}
             </Box>
+            <Typography variant="h6" component="h2" mb={2}>
+              Liste des prospects
+            </Typography>
+            <Box sx={{display:"flex", flexDirection:"column"}}>
+            {data.map((item) => {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handelChecked}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+          })}
+          </Box>
           </Box>
 
         </Box>
