@@ -9,6 +9,9 @@ const EmailForm = () => {
   const [mail, setMail] = useState('');
   const [files, setFiles] = useState([]);
   const [data, setData] = useState([]);
+  const [dataP, setDataP] = useState([]);
+  const [dataC, setDataC] = useState([]);
+  const [dataF, setDataF] = useState([]);
   const [checked, setChecked] = useState([]);
   const [checkedProsp, setCheckedProsp] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -87,8 +90,10 @@ const EmailForm = () => {
         const url = `http://localhost/dolibarr/api/index.php/thirdparties?DOLAPIKEY=${apiKey}`;
         const response = await fetch(url);
         const allData = await response.json();
-        const data = allData.filter((item)=>item.client === '3' || item.client === '2');
-        const dataF = allData.filter((item)=>item.client === '3' || item.client === '2');
+        const data = allData.filter((item)=>item.client === '3');
+        const dataP = allData.filter((item)=>item.client === '2');
+        const dataC = allData.filter((item)=>item.client === '1');
+        const dataF = allData.filter((item)=>item.fournisseur === '1');
         const emails = data.map((item) => item.email);
         const ids = data.map((item) => item.id);
         console.log(ids);
@@ -112,7 +117,10 @@ const EmailForm = () => {
         }
         setReps(reps);
         setData(data);
-        console.log(data);
+        setDataP(dataP);
+        setDataF(dataF);
+        setDataC(dataC);
+        console.log(allData);
       } catch (error) {
         console.log(error);
       }
@@ -210,6 +218,102 @@ const EmailForm = () => {
             </Typography>
             <Box sx={{display:"flex", flexDirection:"column"}}>
             {data.map((item) => {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handleCheckedIndiv}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+          })}
+          </Box>
+          <Typography variant="h6" component="h2" mb={2}>
+              Prospects / Clients
+            </Typography>
+            <Box sx={{display:"flex", flexDirection:"column"}}>
+            {data.map((item) => {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handleCheckedIndiv}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+          })}
+          </Box>
+          <Typography variant="h6" component="h2" mb={2}>
+              Prospects
+            </Typography>
+            <Box sx={{display:"flex", flexDirection:"column"}}>
+            {dataP.map((item) => {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handleCheckedIndiv}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+          })}
+          </Box>
+          <Typography variant="h6" component="h2" mb={2}>
+              Clients
+            </Typography>
+            <Box sx={{display:"flex", flexDirection:"column"}}>
+            {dataC.map((item) => {
+              return (
+                <FormControlLabel
+                  key={item.id}
+                  control={<Checkbox />}
+                  label={item.name}
+                  value={item.email}
+                  onChange={handleCheckedIndiv}
+                  sx={{
+                    '& .MuiCheckbox-root': {
+                      color: '#0F1B4C',
+                    },
+                    '& .Mui-checked': {
+                      color: '#0F1B4C',
+                    },
+                  }}
+                />
+              );
+          })}
+          </Box>
+          <Typography variant="h6" component="h2" mb={2}>
+              Fournisseurs
+            </Typography>
+            <Box sx={{display:"flex", flexDirection:"column"}}>
+            {dataF.map((item) => {
               return (
                 <FormControlLabel
                   key={item.id}
