@@ -10,6 +10,7 @@ const EmailForm = () => {
   const [files, setFiles] = useState([]);
   const [data, setData] = useState([]);
   const [checked, setChecked] = useState([]);
+  const [checkedProsp, setCheckedProsp] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reps, setReps] = useState({});
   const editor = useRef(null);
@@ -57,9 +58,28 @@ const EmailForm = () => {
         setChecked((prevChecked) => prevChecked.filter(item => item !== reps[value]));
       }
     }
+    
+
   };
   
+  const handleCheckedIndiv = (event) => {
 
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked && !checkedProsp.includes(value)) {
+      setCheckedProsp((prevChecked) => [...prevChecked, value]);
+    } else if (!isChecked && checkedProsp.includes(value)) {
+      setCheckedProsp((prevChecked) => prevChecked.filter((item) => item !== value));
+    }
+  
+    
+  };
+  
+  useEffect(() => {
+    console.log("Checked Indiv:", checkedProsp);
+  }, [checkedProsp]); // This will run whenever checkedIndiv changes
+  
   useEffect(() => {
     const fetchProspects = async () => {
       try {
@@ -68,6 +88,7 @@ const EmailForm = () => {
         const response = await fetch(url);
         const allData = await response.json();
         const data = allData.filter((item)=>item.client === '3' || item.client === '2');
+        const dataF = allData.filter((item)=>item.client === '3' || item.client === '2');
         const emails = data.map((item) => item.email);
         const ids = data.map((item) => item.id);
         console.log(ids);
@@ -195,7 +216,7 @@ const EmailForm = () => {
                   control={<Checkbox />}
                   label={item.name}
                   value={item.email}
-                  onChange={handelChecked}
+                  onChange={handleCheckedIndiv}
                   sx={{
                     '& .MuiCheckbox-root': {
                       color: '#0F1B4C',
