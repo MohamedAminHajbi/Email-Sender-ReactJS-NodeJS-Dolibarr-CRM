@@ -10,28 +10,24 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-const transporter = nodemailer.createTransport(
-  smtpTransport({
-    host: '',
-    port: 465,
-    secure: true,
-    auth: {
-      user: '',
-      pass: '',
-    },
-  })
-  );
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'mohamedaminehajbi6@gmail.com',
+    pass: 'qmsqyntspssuwlir',
+  },
+});
 
 
 app.post('/send-email', upload.array('files',10),(req, res) => {
   const { subject, to, mail } = req.body;
   const files = req.files;
-
+  for(let i=0;i<to.length;i++){
     const mailOptions = {
-      from: '',
-      to: to,
+      from: 'mohamedaminehajbi6@gmail.com',
+      to: to[i],
       subject: subject,
-      html: mail,
+      text: mail,
       attachments: []
     };
     if (files && files.length > 0) {
@@ -51,7 +47,7 @@ app.post('/send-email', upload.array('files',10),(req, res) => {
         res.send('Email sent');
       }
     });
-  }
+  }}
 );
 
 app.listen(port, () => {

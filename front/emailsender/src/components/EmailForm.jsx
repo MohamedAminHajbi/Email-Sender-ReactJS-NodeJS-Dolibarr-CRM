@@ -94,8 +94,8 @@ const EmailForm = () => {
         const dataP = allData.filter((item)=>item.client === '2');
         const dataC = allData.filter((item)=>item.client === '1');
         const dataF = allData.filter((item)=>item.fournisseur === '1');
-        const emails = data.map((item) => item.email);
-        const ids = data.map((item) => item.id);
+        const emails = allData.map((item) => item.email);
+        const ids = allData.map((item) => item.id);
         console.log(ids);
         console.log(emails);
         
@@ -192,7 +192,7 @@ const EmailForm = () => {
         >
           <Box display={sidebarOpen ? 'flex' : 'none'} sx={{flexDirection:"column", alignitems: "center", justifycontent:"center"}}>
             <Typography variant="h6" component="h2" mb={2}>
-              Liste des représentants
+              Représentants
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {Object.keys(reps).map((login) => (
@@ -213,30 +213,6 @@ const EmailForm = () => {
                 />
               ))}
             </Box>
-            <Typography variant="h6" component="h2" mb={2}>
-              Liste des prospects
-            </Typography>
-            <Box sx={{display:"flex", flexDirection:"column"}}>
-            {data.map((item) => {
-              return (
-                <FormControlLabel
-                  key={item.id}
-                  control={<Checkbox />}
-                  label={item.name}
-                  value={item.email}
-                  onChange={handleCheckedIndiv}
-                  sx={{
-                    '& .MuiCheckbox-root': {
-                      color: '#0F1B4C',
-                    },
-                    '& .Mui-checked': {
-                      color: '#0F1B4C',
-                    },
-                  }}
-                />
-              );
-          })}
-          </Box>
           <Typography variant="h6" component="h2" mb={2}>
               Prospects / Clients
             </Typography>
@@ -339,7 +315,8 @@ const EmailForm = () => {
         
         <Container sx={{width:"100%"}}>
         <div style={{width:"100%", paddingTop: "20px", display:"flex", justifyContent:"end"}}>
-            <LogoutButton logout={handleLogout}/>
+        <LogoutButton handleLogout={handleLogout} />
+
         </div>
         <Container
           sx={{
