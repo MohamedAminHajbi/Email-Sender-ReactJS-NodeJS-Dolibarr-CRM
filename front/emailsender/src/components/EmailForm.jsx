@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import CustomButton from './CustomButton';
 import LogoutButton from './LogoutButton/LogoutButton'
 import JoditEditor from 'jodit-react';
+import Loader from './Loader/Loader';
+import SuccessSend from './SuccessSend/SuccessSend'
 
 const EmailForm = () => {
   const [subject, setSubject] = useState('');
@@ -16,6 +18,8 @@ const EmailForm = () => {
   const [checkedIndiv, setCheckedIndiv] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reps, setReps] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
   const editor = useRef(null);
   
   console.log(checked);
@@ -136,6 +140,7 @@ const EmailForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     checkedIndiv.forEach((item) => {
         checked.push(item);
     });
@@ -168,6 +173,7 @@ const EmailForm = () => {
     } catch (error) {
       console.error(error);
     }
+    setSent(true);
   };
 
   const handleSidebarToggle = () => {
@@ -175,7 +181,13 @@ const EmailForm = () => {
   };
 
   return (
+    
     <Box height="100vh">
+      {loading && !sent ? (
+      <Loader />
+    ): sent ? (
+      <SuccessSend/>
+    ) : (
       <Box display="flex" flexGrow={1} sx={{height:"100%",backgroundColor:"#EDEDED"}}>
       <Box
           onClick={handleSidebarToggle}
@@ -351,6 +363,7 @@ const EmailForm = () => {
                 />
                 <div>
                   <JoditEditor
+                  required
                 ref={editor}
                 value={mail}
                 tabIndex={1}
@@ -397,6 +410,7 @@ const EmailForm = () => {
           
         </Container>
       </Box>
+    )}
     </Box>
       
     
