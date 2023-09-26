@@ -13,7 +13,7 @@ const EmailForm = () => {
   const [dataC, setDataC] = useState([]);
   const [dataF, setDataF] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [checkedProsp, setCheckedProsp] = useState([]);
+  const [checkedIndiv, setCheckedIndiv] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [reps, setReps] = useState({});
   const editor = useRef(null);
@@ -70,18 +70,18 @@ const EmailForm = () => {
     const value = event.target.value;
     const isChecked = event.target.checked;
 
-    if (isChecked && !checkedProsp.includes(value)) {
-      setCheckedProsp((prevChecked) => [...prevChecked, value]);
-    } else if (!isChecked && checkedProsp.includes(value)) {
-      setCheckedProsp((prevChecked) => prevChecked.filter((item) => item !== value));
+    if (isChecked && !checkedIndiv.includes(value)) {
+      setCheckedIndiv((prevChecked) => [...prevChecked, value]);
+    } else if (!isChecked && checkedIndiv.includes(value)) {
+      setCheckedIndiv((prevChecked) => prevChecked.filter((item) => item !== value));
     }
   
     
   };
   
   useEffect(() => {
-    console.log("Checked Indiv:", checkedProsp);
-  }, [checkedProsp]); // This will run whenever checkedIndiv changes
+    console.log("Checked Indiv:", checkedIndiv);
+  }, [checkedIndiv]); // This will run whenever checkedIndiv changes
   
   useEffect(() => {
     const fetchProspects = async () => {
@@ -136,11 +136,15 @@ const EmailForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    checkedIndiv.forEach((item) => {
+        checked.push(item);
+    });
     const newChecked = checked.filter((item, index) => checked.indexOf(item) === index);
+    console.log('finatllchecked',newChecked)
     setChecked(newChecked);
     const formData = new FormData();
     formData.append('subject', subject);
-    formData.append('to', checked);
+    formData.append('checked', checked);
     formData.append('mail', mail);
     files.forEach((file) => {
       formData.append('files', file);

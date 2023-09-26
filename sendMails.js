@@ -1,6 +1,6 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const smtpTransport = require('nodemailer-smtp-transport');
+
 const cors = require('cors');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/'});
@@ -20,14 +20,14 @@ const transporter = nodemailer.createTransport({
 
 
 app.post('/send-email', upload.array('files',10),(req, res) => {
-  const { subject, to, mail } = req.body;
+  const { subject, checked, mail } = req.body;
   const files = req.files;
-  for(let i=0;i<to.length;i++){
+  
     const mailOptions = {
       from: 'mohamedaminehajbi6@gmail.com',
-      to: to[i],
+      to: checked,
       subject: subject,
-      text: mail,
+      html: mail,
       attachments: []
     };
     if (files && files.length > 0) {
@@ -47,7 +47,7 @@ app.post('/send-email', upload.array('files',10),(req, res) => {
         res.send('Email sent');
       }
     });
-  }}
+  }
 );
 
 app.listen(port, () => {
